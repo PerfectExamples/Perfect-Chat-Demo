@@ -42,7 +42,7 @@ body {
 
 .chat-window {
  	height: 75vh;
- 	margin-top: 30px;
+ 	margin-top: 10vh;
 	
 	background: #fff;
 	box-shadow: 2px 4px 16px rgba(48, 48, 48, 0.5);
@@ -143,9 +143,6 @@ textarea:focus, input:focus{
 }
 
 @media (min-width: 768px) {
-	.chat-window {
-		margin-top: 50px;
-	}
 	
 	.sendbar {
 		width: 98%;

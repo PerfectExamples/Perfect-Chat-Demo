@@ -8,9 +8,16 @@ License: See license file
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
 body {
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, "Proxima Nova", "Melno", "Meslo", Arial, sans-serif;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, "Melno", "Meslo", Arial, sans-serif;
 	color: #f1f1f1;
-	background: #20323F;
+	width: 100vw; height: 100vh;
+
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ef9634+37,de4d31+100 */
+	background: #ef9634; /* Old browsers */
+	background: -moz-linear-gradient(-45deg, #ef9634 37%, #de4d31 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(-45deg, #ef9634 37%,#de4d31 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(135deg, #ef9634 37%,#de4d31 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef9634', endColorstr='#de4d31',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 #main {
@@ -20,6 +27,7 @@ body {
 #header {
 	margin: 0; padding: 20px;
 	width: 100%; height: 92px;
+	background: #20323F
 }
 
 .logo {
@@ -29,20 +37,12 @@ body {
 }
 
 #content {
-	width: 100%; min-height: 84vh;
-	margin: 0; padding: 50px 0;
-	box-shadow: 0px -1px 4px rgba(27, 27, 27, 0.81);
 	
-	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ef9634+37,de4d31+100 */
-	background: #ef9634; /* Old browsers */
-	background: -moz-linear-gradient(-45deg, #ef9634 37%, #de4d31 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(-45deg, #ef9634 37%,#de4d31 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(135deg, #ef9634 37%,#de4d31 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef9634', endColorstr='#de4d31',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
 .chat-window {
-	min-height: 500px;
+ 	min-height: 75vh;
+ 	margin-top: 30px;
 	
 	background: #fff;
 	box-shadow: 2px 4px 16px rgba(48, 48, 48, 0.5);
@@ -50,4 +50,65 @@ body {
 	border-radius: 8px;
 	-webkit-border-radius: 8px;
 	-moz-border-radius: 8px;
+	
+	overflow: hidden;
+}
+
+.messages {
+	overflow: hidden;
+	overflow-y: scroll;
+}
+
+.sendbar {
+	width: 100%;
+	padding: 16px 12px;
+	
+	position: absolute;
+	bottom: 0;
+	
+	color: #858585;
+	font-weight: 100;
+}
+
+.sendbar form {
+	min-width: 100%;
+}
+
+.sendbar input {
+	width: 60%;
+	border: none;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.sendbar .btn-submit {
+	margin: 0; padding: 2px 24px;
+	position: absolute; right: 28px;
+	
+	border-radius: 20px;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	
+	background: #3194E1;
+	color: #fff;
+	font-size: 10px;
+	font-weight: normal;
+	box-shadow: none;
+	border: none;
+}
+
+.sendbar .btn-submit:hover {
+	box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+@media (min-width: 768px) {
+	.chat-window {
+		margin-top: 50px;
+	}
+	
+	.sendbar input {
+		width: 80%;
+	}
 }

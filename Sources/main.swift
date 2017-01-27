@@ -20,6 +20,7 @@ let routes = [
     ["method":"get", "uri":"/**", "handler":PerfectHTTPServer.HTTPHandler.staticFiles,
 				 "documentRoot":"./webroot",
 				 "allowResponseFilters":true],
+    ["method":"get", "uri":"/chat", "handler":chatHandler]
 ]
 
 let config = [

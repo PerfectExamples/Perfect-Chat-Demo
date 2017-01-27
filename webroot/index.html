@@ -100,14 +100,20 @@
 			
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script src="js/md5.min.js"></script>
 			<script src="js/dynamics.min.js"></script>
 			<script src="js/animations.js"></script>
+            <script src="js/webchat.js"></script>
 			
 			<script type="text/javascript">
 			    $(document).ready(function() {
 			        $("img").addClass("img-responsive");
 			});
 			</script>
+            
+            <script>
+                var chat = new Webchat(window.location.host);
+            </script>
 						
 		</footer>
 		

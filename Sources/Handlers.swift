@@ -63,6 +63,14 @@ class EchoHandler: WebSocketSessionHandler {
             // Print some information to the console for informational purposes.
             print("Read msg: \(string) op: \(op) fin: \(fin)")
             
+            do {
+                guard fin == true, let json = try string.jsonDecode() as? [String: Any] else {return}
+                let user = try ChatUser(json: json)
+                Chatroom.instance.join(user: user, socket: socket)
+            } catch {
+                print("Failed to decode JSON from Received Socket Message")
+            }
+            
             // Echo the data received back to the client.
             // Pass true for final. This will usually be the case, but WebSockets has
             // the concept of fragmented messages.
@@ -71,12 +79,12 @@ class EchoHandler: WebSocketSessionHandler {
             // This indicates to the receiver that there is more data to come in
             // subsequent messages but that all the data is part of the same logical message.
             // In such a scenario one would pass true for final only on the last bit of the video.
-            socket.sendStringMessage(string: string, final: true) {
-                
-                // This callback is called once the message has been sent.
-                // Recurse to read and echo new message.
-                self.handleSession(request: request, socket: socket)
-            }
+//            socket.sendStringMessage(string: string, final: true) {
+//                
+//                // This callback is called once the message has been sent.
+//                // Recurse to read and echo new message.
+//                self.handleSession(request: request, socket: socket)
+//            }
         }
     }
 }

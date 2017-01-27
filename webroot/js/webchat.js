@@ -9,43 +9,70 @@ function Webchat(hostname) {
     
     //Get & Sent Basic Info to Server
     chat.promptUsername = function() {
-        var email = prompt('What is your email?');
+        while (!email) {
+            var email = prompt('What is your gravatar email? (anything but blank works)');
+        }
+        
+        while (!displayName) {
+            var displayName = prompt('What do you want to be called?');
+        }
+        
         var hash = md5(email.toLowerCase());
         var avatarImageURI = "https://www.gravatar.com/avatar/" + hash;
-        var avatarProfile = "https://www.gravatar.com/" + hash + ".json";
 
-        chat.start(email, avatarImageURI, avatarProfile);
+        chat.start(email, avatarImageURI, displayName);
     }
     
-    chat.start = function(email, avatarImageURI, avatarProfile) {
+    chat.start = function(email, avatarImageURI, name) {
         
-        let json = JSON.stringify({"email":email, "avatar":avatarImageURI, "profileJSONURI": avatarProfile});
+        let json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
         
         chat.socket.send(json);
         show();
     }
     
     //Handle Chat Text Submission
-/*    $('form').on('submit', function(e) {
+    $('form').on('submit', function(e) {
          e.preventDefault();
          
-         var message = $('.message-input').val();
-         
-         if (message.length == 0 || message.length >= 256) {
-         return;
-         }
-         
-         chat.send(message);
-         $('.message-input').val('');
+        //Do Stuff
      });
-*/
     
     //Append New Messages
-    
+    chat.appendMessage = function(message, avatar, selfSent) {
+        
+        var messageSection = document.querySelector('.messages');
+        
+        var div = document.createElement('div');
+        div.className = 'message';
+        
+        if (selfSent) {
+            div.className += 'self';
+        }
+        
+        var image = document.createElement('img');
+        image.className = 'avatar';
+        image.src = avatar;
+        image.alt = 'Avatar';
+        
+        var span = document.createElement('span');
+        span.innerHTML = message;
+        
+        div.appendChild(image);
+        div.appendChild(span);
+        
+        messageSection.appendChild(div);
+    }
     
     //Send New Messages to Server
     
     
     //Receive New Messages from the Server
-    
+    chat.socket.onmessage = function(received) {
+        var jsonAry = JSON.parse(received.data);
+        var message = jsonAry["message"];
+        var avatar = jsonAry["avatar"];
+        var selfSent = false;
+        chat.appendMessage(message, avatar, selfSent);
+    }
 }

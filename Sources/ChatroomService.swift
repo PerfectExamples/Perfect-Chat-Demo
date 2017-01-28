@@ -26,7 +26,7 @@ class Chatroom {
     
     func sendMessage(_ message: String, fromUser user: ChatUser) {
         
-        let json = ["user": user.displayName, "message": message, "avatar": user.avatarURI]
+        let json = ["user": user.displayName, "message": "\(user.displayName): \(message)", "avatar": user.avatarURI]
         
         do {
             let final = try json.jsonEncodedString()

@@ -1,5 +1,8 @@
 function Webchat(hostname) {
     var chat = this;
+    var username = "";
+    var displayName = "";
+    var avatar = "";
 
     //Start Lifecycle
     chat.socket = new WebSocket('ws://' + hostname + '/chat', 'chat');
@@ -9,18 +12,18 @@ function Webchat(hostname) {
     
     //Get & Sent Basic Info to Server
     chat.promptUsername = function() {
-        while (!email) {
-            var email = prompt('What is your gravatar email? (anything but blank works)');
+        while (!username) {
+            username = prompt('What is your gravatar email? (anything but blank works)');
         }
         
         while (!displayName) {
-            var displayName = prompt('What do you want to be called?');
+            displayName = prompt('What do you want to be called?');
         }
         
-        var hash = md5(email.toLowerCase());
-        var avatarImageURI = "https://www.gravatar.com/avatar/" + hash;
+        var hash = md5(username.toLowerCase());
+        avatar = "https://www.gravatar.com/avatar/" + hash;
 
-        chat.start(email, avatarImageURI, displayName);
+        chat.start(username, avatar, displayName);
     }
     
     chat.start = function(email, avatarImageURI, name) {
@@ -35,7 +38,11 @@ function Webchat(hostname) {
     $('form').on('submit', function(e) {
          e.preventDefault();
          
-        //Do Stuff
+        var text = $('.sendbar-input').val();
+ 
+        chat.appendMessage(text, avatar, true)
+                 
+        $('.sendbar-input').val('');
      });
     
     //Append New Messages
@@ -46,10 +53,6 @@ function Webchat(hostname) {
         var div = document.createElement('div');
         div.className = 'message';
         
-        if (selfSent) {
-            div.className += 'self';
-        }
-        
         var image = document.createElement('img');
         image.className = 'avatar';
         image.src = avatar;
@@ -58,6 +61,10 @@ function Webchat(hostname) {
         var span = document.createElement('span');
         span.innerHTML = message;
         
+        if (selfSent) {
+            div.className += ' self';
+        }
+        
         div.appendChild(image);
         div.appendChild(span);
         
@@ -65,7 +72,10 @@ function Webchat(hostname) {
     }
     
     //Send New Messages to Server
-    
+    chat.sendMessage = function(email, message) {
+        let json = JSON.stringify({"email":email, "message":message});
+        chat.socket.send(json);
+    }
     
     //Receive New Messages from the Server
     chat.socket.onmessage = function(received) {

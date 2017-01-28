@@ -132,6 +132,7 @@ textarea:focus, input:focus{
 
 .message.self, .self img.avatar {
 	float: right;
+	margin-left: 10px;
 }
 
 .message span {

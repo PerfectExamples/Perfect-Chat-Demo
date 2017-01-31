@@ -8,7 +8,7 @@ function Webchat(hostname) {
     chat.socket = new WebSocket('ws://' + hostname + '/chat', 'chat');
     chat.socket.onopen = function() {
         chat.promptUsername();
-    };
+    }
     
     //Get & Sent Basic Info to Server
     chat.promptUsername = function() {
@@ -28,8 +28,9 @@ function Webchat(hostname) {
     
     chat.start = function(email, avatarImageURI, name) {
         
-        let json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
+        var json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
         
+        chat.socket.send(json);
         chat.socket.send(json);
         show();
     }
@@ -40,8 +41,8 @@ function Webchat(hostname) {
          
         var text = $('.sendbar-input').val();
  
-        chat.appendMessage(text, avatar, true)
-                 
+        chat.appendMessage(text, avatar, true);
+        chat.sendMessage(text);
         $('.sendbar-input').val('');
      });
     
@@ -69,11 +70,13 @@ function Webchat(hostname) {
         div.appendChild(span);
         
         messageSection.appendChild(div);
+        messageSection.scrollTop = messageSection.scrollHeight;
     }
     
     //Send New Messages to Server
-    chat.sendMessage = function(email, message) {
-        let json = JSON.stringify({"email":email, "message":message});
+    chat.sendMessage = function(message) {
+        var json = JSON.stringify({"email": username, "avatar": avatar, "displayName": displayName, "message": message});
+        console.log(json);
         chat.socket.send(json);
     }
     
@@ -85,4 +88,4 @@ function Webchat(hostname) {
         var selfSent = false;
         chat.appendMessage(message, avatar, selfSent);
     }
-}
+};

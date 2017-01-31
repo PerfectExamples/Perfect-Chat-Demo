@@ -26,13 +26,13 @@ func chatHandler(data: [String:Any]) throws -> RequestHandler {
         }
         
         // Return our service handler.
-        return EchoHandler()
+        return ChatHandler()
         }).handleRequest(request: request, response: response)
         
     }
 }
 
-class EchoHandler: WebSocketSessionHandler {
+class ChatHandler: WebSocketSessionHandler {
     
     // The name of the super-protocol we implement.
     // This is optional, but it should match whatever the client-side WebSocket is initialized with.
@@ -40,6 +40,8 @@ class EchoHandler: WebSocketSessionHandler {
     
     // This function is called by the WebSocketHandler once the connection has been established.
     func handleSession(request: HTTPRequest, socket: WebSocket) {
+        
+        var user: ChatUser? = nil
         
         // Read a message from the client as a String.
         // Alternatively we could call `WebSocket.readBytesMessage` to get the data as a String.
@@ -50,7 +52,7 @@ class EchoHandler: WebSocketSessionHandler {
             //  a boolean indicating if the message is complete
             // (as opposed to fragmented)
             string, op, fin in
-            
+
             // The data parameter might be nil here if either a timeout
             // or a network error, such as the client disconnecting, occurred.
             // By default there is no timeout.
@@ -65,8 +67,15 @@ class EchoHandler: WebSocketSessionHandler {
             
             do {
                 guard fin == true, let json = try string.jsonDecode() as? [String: Any] else {return}
-                let user = try ChatUser(json: json)
-                Chatroom.instance.join(user: user, socket: socket)
+                user = try ChatUser(json: json)
+                
+                if let message = json["message"] as? String {
+                    print(message)
+                } else {
+                    if user != nil {
+                       Chatroom.instance.join(user: user!, socket: socket)
+                    }
+                }
             } catch {
                 print("Failed to decode JSON from Received Socket Message")
             }

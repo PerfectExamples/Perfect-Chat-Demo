@@ -1,4 +1,5 @@
-# Multiple Server Instances Demo
+# Chat Demo
+## NEEDS RE-WRITTEN
 
 <p align="center">
     <a href="http://perfect.org/get-involved.html" target="_blank">

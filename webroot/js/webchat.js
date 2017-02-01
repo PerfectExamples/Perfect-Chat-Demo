@@ -31,7 +31,6 @@ function Webchat(hostname) {
         var json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
         
         chat.socket.send(json);
-        chat.socket.send(json);
         show();
     }
     

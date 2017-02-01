@@ -80,20 +80,8 @@ class ChatHandler: WebSocketSessionHandler {
                 print("Failed to decode JSON from Received Socket Message")
             }
             
-            // Echo the data received back to the client.
-            // Pass true for final. This will usually be the case, but WebSockets has
-            // the concept of fragmented messages.
-            // For example, if one were streaming a large file such as a video,
-            // one would pass false for final.
-            // This indicates to the receiver that there is more data to come in
-            // subsequent messages but that all the data is part of the same logical message.
-            // In such a scenario one would pass true for final only on the last bit of the video.
-//            socket.sendStringMessage(string: string, final: true) {
-//                
-//                // This callback is called once the message has been sent.
-//                // Recurse to read and echo new message.
-//                self.handleSession(request: request, socket: socket)
-//            }
+            //Loop back around and read the next message
+            self.handleSession(request: request, socket: socket)
         }
     }
 }

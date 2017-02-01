@@ -27,11 +27,9 @@ function Webchat(hostname) {
     }
     
     chat.start = function(email, avatarImageURI, name) {
-        
         var json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
-        
         chat.socket.send(json);
-        show();
+        show(); //This triggers the animation that shows the main window, defined in animations.js
     }
     
     //Handle Chat Text Submission

@@ -1,5 +1,4 @@
 # Chat Demo
-## NEEDS RE-WRITTEN
 
 <p align="center">
     <a href="http://perfect.org/get-involved.html" target="_blank">
@@ -40,17 +39,15 @@
     </a>
 </p>
 
-This repository holds a project designed to show you how to setup and use multiple server instances. 
+This repository holds a project designed to show you how to setup and use web sockets. 
 
-In this example, you are designing an API for a shipping company, when you realize that you need both a private and public API. One for your staff to use to add and modify shipments, and one for customers or third party software to use to track it. 
+In this example, we designed a real-time chat service.
 
 The objects are separated by function:
 
-- Shipment is the model
-- ShipmentManager interacts with the database through SQLiteStORM
-- Shipments uses ShipmentManager to produce JSON for the handlers
-- Handers contains the functions that the server uses to respond to requests
-- Database & PrivateAuth are helpers for setup and demo
+- ChatUser is the model for a user
+- ChatroomService is both the model for the chatroom itself, and the underlying data handler. This is accomplished by using only initialized variables in the class, as well as creating an instance of the class held by itself `static let instance = Chatroom()`. In practice this is commonly referred to as creating a "singleton" (meaning that there is only ever one instance of the class used). Many people also call this a data service. Since you never need to initialize an instance of it, you can simply refer to the class.instance to use the shared resources, i.e. `Chatroom.instance.sendMessage(message, fromUser: chatUser)`.
+- The socket handler that handles each socket, contained in Handlers.swift, along with the request handler for the /chat route that initially spawns it. 
 
 ## Compatibility with Swift
 
@@ -58,121 +55,43 @@ The master branch of this project currently compiles with **Xcode 8.2** or the *
 
 ## Building & Running
 
-The following will clone and build an empty starter project and launch the server on port 8080 and 8181.
+The following will clone and build an empty starter project and launch the server on port 8181.
 
 ```
-git clone [Repo Address Here]
-cd MultipleServerInstances
+git clone https://github.com/PerfectExamples/Perfect-Chat-Demo.git
+cd Perfect-Chat-Demo
 swift build
-.build/debug/MultipleServerInstances
+.build/debug/Perfect-Chat-Demo
 ```
 
 You should see the following output:
 
 ```
-[INFO] Starting HTTP server Public API on 0.0.0.0:8080
-[INFO] Starting HTTP server Private API on 0.0.0.0:8181
+[INFO] Starting HTTP server Chat on 0.0.0.0:8181
 ```
 
-This means the servers are running and waiting for connections. Access the public API routes at [http://localhost:8080/](http://127.0.0.1:8080/) and the private API routes at [http://localhost:8181/](http://127.0.0.1:8181/). Hit control-c to terminate the server.
+This means the server is running and waiting for connections. Access the API routes at [http://0.0.0.0:8181/](http://0.0.0.0:8181/). Hit control-c to terminate the server.
 
 ### IMPORTANT NOTE ABOUT XCODE
 
-If you choose to generate an Xcode Project, you **MUST** change to the executable target **AND** setup a custom working directory for its scheme in order for the database to create and work properly. 
+If you choose to generate an Xcode Project, you **MUST** change to the executable target **AND** setup a custom working directory wherever you cloned the project. 
 
-![Proper Xcode Setup](https://github.com/rymcol/MultipleServerInstances/raw/master/Supporting/xcode.png)
+![Proper Xcode Setup](https://github.com/PerfectExamples/Perfect-Chat-Demo/raw/master/Supporting/xcode.png)
 
 ## Testing
 
-The public API routes at [http://localhost:8080/](http://127.0.0.1:8080/) are:
+The API routes at [http://localhost:8080/](http://127.0.0.1:8080/) are:
 
-- / (This only returns a welcome message)
-- /track
+- /
+- /chat
 
-### /track
+### /
 
-To use track, use your favorite http client to make a post request to /track with a JSON body including the key `trackingNumber` and the value of the tracking number you would like to track (assuming one has been created). Example:
+The base route is simply the public facing website that provides the chat interface to the user, and then interacts with the websocket through javascript. 
 
-```
-{"trackingNumber":"13100E4F-6878-4E80-B93A-22B84AD0A11E"}
-```
+### /chat
 
-The private API routes at [http://localhost:8181/](http://127.0.0.1:8181/) are:
-
-- / (This only returns a welcome message)
-- /track (works the same as above)
-- /count
-- /create
-- /update
-- /set/delivered
-- /delete
-
-### IMPORTANT NOTE ABOUT THE PRIVATE API
-
-There is a filter on the private API that will return an unauthorized error if you do not add a header value to your request of key `token` and value `13100E4F22B84AD0A11E`
-
-This is to simulate an API key for private requests, showing that it's easy to make a public/private API pair using multiple server instances on groups of the same routes. 
-
-### /count
-
-To use /count, you make a get request. It will return JSON containing a count of the number of shipments in the database. 
-
-### /create
-
-To use /create, make a post request with the following keys and whatever values you would like:
-
-```
-{
-"destination":"1234 Test Ln",
-"hub":"Tampa, FL"
-}
-```
-
-Where `destination` is the address the shipment is going to, and `hub` is the identifier for the shipping hub/terminal/office (where it's originating from, and what will become the last known location). 
-
-The API will return JSON with information about the shipment, including the new tracking number it generated. It should look like this:
-
-```
-{"LastLocation":"Tampa, FL","Destination":"1234 Test Ln","Tracking Number":"895AFBF2-265D-4F56-81E1-E7336EAEEF10"}
-```
-
-### /update
-
-To use /update, make a post request with the following keys and whatever values you would like (or you can include only one, such as only updating the current hub for tracking):
-
-```
-{
-"trackingNumber":"895AFBF2-265D-4F56-81E1-E7336EAEEF10",
-"destination":"1235 Test Ln, Tampa, FL 34200",
-"hub":"Houston, TX"
-}
-```
-
-The API will respond with {"success": true} (or false if it encountered any errors)
-
-### /set/delivered
-
-To mark a shipment delivered, make a post request with the tracking number to /set/delivered, i.e.:
-
-```
-{
-"trackingNumber":"895AFBF2-265D-4F56-81E1-E7336EAEEF10"
-}
-```
-
-The API will respond with {"success": true} (or false if it encountered any errors)
-
-### /delete
-
-To delete a shipment from the database, make a post request with the tracking number to /set/delivered, i.e.:
-
-```
-{
-"trackingNumber":"895AFBF2-265D-4F56-81E1-E7336EAEEF10"
-}
-```
-
-The API will respond with {"success": true} (or false if it encountered any errors)
+Chat is the route that is used to create a new websocket connection with a client. This is only for the socket, and visiting it in a browser or performing a normal HTTP get request will result in a 400 (Bad Request) error. 
 
 ## Issues
 

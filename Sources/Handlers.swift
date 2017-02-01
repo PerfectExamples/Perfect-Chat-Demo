@@ -69,13 +69,15 @@ class ChatHandler: WebSocketSessionHandler {
                 guard fin == true, let json = try string.jsonDecode() as? [String: Any] else {return}
                 user = try ChatUser(json: json)
                 
-                if let message = json["message"] as? String {
-                    print(message)
-                } else {
-                    if user != nil {
-                       Chatroom.instance.join(user: user!, socket: socket)
+                if let chatUser = user {
+                    if let message = json["message"] as? String {
+                        Chatroom.instance.sendMessage(message, fromUser: chatUser)
+                    } else {
+                        Chatroom.instance.join(user: chatUser, socket: socket)
                     }
                 }
+                
+                
             } catch {
                 print("Failed to decode JSON from Received Socket Message")
             }

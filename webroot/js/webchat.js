@@ -33,13 +33,14 @@ function Webchat(hostname) {
     }
     
     //Handle Chat Text Submission
-    $('form').on('submit', function(e) {
-         e.preventDefault();
+    $('form').on('submit', function(form) {
+         form.preventDefault();
          
         var text = $('.sendbar-input').val();
  
         chat.appendMessage(text, avatar, true);
         chat.sendMessage(text);
+                 
         $('.sendbar-input').val('');
      });
     
@@ -73,7 +74,6 @@ function Webchat(hostname) {
     //Send New Messages to Server
     chat.sendMessage = function(message) {
         var json = JSON.stringify({"email": username, "avatar": avatar, "displayName": displayName, "message": message});
-        console.log(json);
         chat.socket.send(json);
     }
     

@@ -62,7 +62,7 @@ class ChatHandler: WebSocketSessionHandler {
                 return
             }
             
-            // Print some information to the console for informational purposes.
+            // Print some information to the console for to show the incoming messages.
             print("Read msg: \(string) op: \(op) fin: \(fin)")
             
             do {
@@ -71,8 +71,10 @@ class ChatHandler: WebSocketSessionHandler {
                 
                 if let chatUser = user {
                     if let message = json["message"] as? String {
+                        //If there's a message attached, we send it
                         Chatroom.instance.sendMessage(message, fromUser: chatUser)
                     } else {
+                        //Otherwise, they must be joining, so add them!
                         Chatroom.instance.join(user: chatUser, socket: socket)
                     }
                 }
@@ -82,7 +84,7 @@ class ChatHandler: WebSocketSessionHandler {
                 print("Failed to decode JSON from Received Socket Message")
             }
             
-            //Loop back around and read the next message
+            //Done working on this message? Loop back around and read the next message.
             self.handleSession(request: request, socket: socket)
         }
     }

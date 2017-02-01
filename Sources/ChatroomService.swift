@@ -33,7 +33,7 @@ class Chatroom {
             for (username, socket) in _chats {
                 if username != user {
                     socket.sendStringMessage(string: final, final: true) {
-                        print("message: \(final) was sent")
+                        print("message: \(final) was sent by user: \(user.displayName)")
                     }
                 }
             }

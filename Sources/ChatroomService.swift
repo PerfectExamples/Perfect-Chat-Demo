@@ -14,6 +14,7 @@ import PerfectWebSockets
 
 class Chatroom {
     
+    //This line makes this a singleton, where you only use one shared instance of this class across the whole project. Singletons are VERY useful as a dataservice where data moves in and out, but needs to be shown in many places. 
     static let instance = Chatroom()
     
     private var _chats = [ChatUser: WebSocket]()

@@ -6,12 +6,14 @@ function Webchat(hostname) {
 
     //Start Lifecycle
     chat.socket = new WebSocket('ws://' + hostname + '/chat', 'chat');
+    
+    //Start Chat Sequence On New Chat
     chat.socket.onopen = function() {
-        chat.promptUsername();
+        chat.promptUserInfo();
     }
     
     //Get & Sent Basic Info to Server
-    chat.promptUsername = function() {
+    chat.promptUserInfo = function() {
         while (!username) {
             username = prompt('What is your gravatar email? (anything but blank works)');
         }

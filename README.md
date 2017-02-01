@@ -89,6 +89,10 @@ The API routes at [http://localhost:8080/](http://127.0.0.1:8080/) are:
 
 The base route is simply the public facing website that provides the chat interface to the user, and then interacts with the websocket through javascript. 
 
+At first connection, the server will prompt you for your Gravatar associated email, and then whatever you would like to be called. **ANYTHING** will work in the first prompt if you do not have a Travatar account. Simply type anything that is not blank and it will assign you a generic avatar image. Whoever you put in the second box will become your name in the chat. 
+
+The reason for the second prompt is that while the Gravatar API allows any host to pull an image, the Gravatar profile API has CORS policy that forbids localhosts from retrieving information. Since this project is meant to run locally as an example, we simply cannot connect to the profile API to pull a displayName. 
+
 ### /chat
 
 Chat is the route that is used to create a new websocket connection with a client. This is only for the socket, and visiting it in a browser or performing a normal HTTP get request will result in a 400 (Bad Request) error. 

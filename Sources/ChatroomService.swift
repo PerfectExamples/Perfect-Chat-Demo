@@ -25,6 +25,11 @@ class Chatroom {
         sendMessage("\(user.displayName) Joined", fromUser: bot)
     }
     
+    func leave(user: ChatUser) {
+        _chats.removeValue(forKey: user)
+        sendMessage("\(user.displayName) Left", fromUser: bot)
+    }
+    
     func sendMessage(_ message: String, fromUser user: ChatUser) {
         
         let json = ["user": user.displayName, "message": "\(user.displayName): \(message)", "avatar": user.avatarURI]

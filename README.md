@@ -53,6 +53,10 @@ The objects are separated by function:
 
 The master branch of this project currently compiles with **Xcode 8.2** or the **Swift 3.0.2** toolchain on Ubuntu.
 
+## Demo server:
+
+A live demo of this runs currently at: [http://chatserver-758198327.us-east-1.elb.amazonaws.com](http://chatserver-758198327.us-east-1.elb.amazonaws.com)
+
 ## Building & Running
 
 The following will clone and build an empty starter project and launch the server on port 8181.

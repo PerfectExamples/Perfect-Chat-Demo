@@ -34,14 +34,14 @@ func chatHandler(data: [String:Any]) throws -> RequestHandler {
 
 class ChatHandler: WebSocketSessionHandler {
     
+    var user: ChatUser? = nil
+    
     // The name of the super-protocol we implement.
     // This is optional, but it should match whatever the client-side WebSocket is initialized with.
     let socketProtocol: String? = "chat"
     
     // This function is called by the WebSocketHandler once the connection has been established.
     func handleSession(request: HTTPRequest, socket: WebSocket) {
-        
-        var user: ChatUser? = nil
         
         // Read a message from the client as a String.
         // Alternatively we could call `WebSocket.readBytesMessage` to get the data as a String.
@@ -58,6 +58,11 @@ class ChatHandler: WebSocketSessionHandler {
             // By default there is no timeout.
             guard let string = string else {
                 // This block will be executed if, for example, the browser window is closed.
+                if let chatUser = self.user {
+                    print("socket closed for \(chatUser.email)")
+                    Chatroom.instance.leave(user: chatUser)
+                }
+                
                 socket.close()
                 return
             }
@@ -67,9 +72,9 @@ class ChatHandler: WebSocketSessionHandler {
             
             do {
                 guard fin == true, let json = try string.jsonDecode() as? [String: Any] else {return}
-                user = try ChatUser(json: json)
+                self.user = try ChatUser(json: json)
                 
-                if let chatUser = user {
+                if let chatUser = self.user {
                     if let message = json["message"] as? String {
                         //If there's a message attached, we send it
                         Chatroom.instance.sendMessage(message, fromUser: chatUser)

@@ -1,9 +1,11 @@
 function Webchat(hostname) {
+    
+    //Declarations
     var chat = this;
     var username = "";
     var displayName = "";
     var avatar = "";
-
+    
     //Start Lifecycle
     chat.socket = new WebSocket('ws://' + hostname + '/chat', 'chat');
     
@@ -12,7 +14,7 @@ function Webchat(hostname) {
         chat.promptUserInfo();
     }
     
-    //Get & Sent Basic Info to Server
+    //Get & Send Basic Info to Server
     chat.promptUserInfo = function() {
         while (!username) {
             username = prompt('What is your gravatar email? (anything but blank works)');
@@ -24,29 +26,18 @@ function Webchat(hostname) {
         
         var hash = md5(username.toLowerCase());
         avatar = "https://www.gravatar.com/avatar/" + hash;
-
+        
         chat.start(username, avatar, displayName);
     }
     
+    //Actually setup the chat window and start talking
     chat.start = function(email, avatarImageURI, name) {
         var json = JSON.stringify({"email":email, "avatar":avatarImageURI, "displayName": name});
         chat.socket.send(json);
-        show(); //This triggers the animation that shows the main window, defined in animations.js
+        showChatWindow(); //This triggers the animation that shows the main window, defined in animations.js
     }
     
-    //Handle Chat Text Submission
-    $('form').on('submit', function(form) {
-         form.preventDefault();
-         
-        var text = $('.sendbar-input').val();
- 
-        chat.appendMessage(text, avatar, true);
-        chat.sendMessage(text);
-                 
-        $('.sendbar-input').val('');
-     });
-    
-    //Append New Messages
+    //Append New Messages to the Chat Window
     chat.appendMessage = function(message, avatar, selfSent) {
         
         var messageSection = document.querySelector('.messages');
@@ -87,4 +78,17 @@ function Webchat(hostname) {
         var selfSent = false;
         chat.appendMessage(message, avatar, selfSent);
     }
+    
+    //Handle Chat Text Submission
+    $('form').on('submit', function(form) {
+         form.preventDefault();
+         
+         var text = $('.sendbar-input').val();
+         
+         chat.appendMessage(text, avatar, true);
+         chat.sendMessage(text);
+         
+         $('.sendbar-input').val('');
+     });
 };
+

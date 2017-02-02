@@ -1,6 +1,13 @@
+/*
+ Author: Ryan M. Collins
+ Description: Perfect Chat
+ Version: 1.0
+ License: See license file
+ */
+
 var chatWindow = document.querySelector('.chat-window')
 
-function show() {
+function showChatWindow() {
   dynamics.animate(chatWindow, {
    opacity: 1,
    scale: 1

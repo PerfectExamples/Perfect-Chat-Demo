@@ -11,6 +11,7 @@ buildlinux
 Packages
 db/
 *.orig
+PADockerfile_build
 
 #Xcode
 *~.nib

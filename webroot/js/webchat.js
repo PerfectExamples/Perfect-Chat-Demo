@@ -1,3 +1,7 @@
+//Hold a chat.
+var chat = new Webchat(window.location.host);
+
+//Define what a chat is.
 function Webchat(hostname) {
     
     //Declarations
